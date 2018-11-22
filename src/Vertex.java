@@ -24,10 +24,10 @@ public class Vertex
     }
 
     public boolean addNeighborOrIncreaseWeight(Vertex v, Integer weight){
-        /*if(neighbors.containsKey(v)) {
+        if(neighbors.containsKey(v)) {
             neighbors.put(v, neighbors.get(v) + 1);
             return true;
-        }*/
+        }
         this.neighbors.put(v,weight);
         return true;
     }

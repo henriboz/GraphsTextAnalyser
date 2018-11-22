@@ -39,6 +39,8 @@ public class Graph {
     public boolean addNeighbor(int vertexIndex, int neighborIndex, int weight){
         if(directed) {
             vertices.get(vertexIndex).addNeighborOrIncreaseWeight(vertices.get(neighborIndex), weight);
+            /*System.out.println("Adding neighbour: " + vertices.get(vertexIndex).getName() + " -> " +
+                    vertices.get(neighborIndex).getName());*/
         } else{
             vertices.get(vertexIndex).addNeighborOrIncreaseWeight(vertices.get(neighborIndex), weight);
             vertices.get(neighborIndex).addNeighborOrIncreaseWeight(vertices.get(vertexIndex), weight);

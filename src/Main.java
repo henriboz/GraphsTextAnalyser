@@ -1,14 +1,30 @@
 
 
+import java.io.IOException;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
 
     private static Graph graph;
     private static int origin, destination, distance;
+    private static final String BOOK = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
+
 
     public static void main(String[] args) {
         menu();
+    }
+
+    public static void readFiles() {
+        FileVisitor<Path> fileProcessor = new ProcessFile(graph);
+        try {
+            Files.walkFileTree(Paths.get(BOOK), fileProcessor);
+        } catch (IOException e){
+            System.out.println("ERROR - " + e);
+        }
     }
 
     public static void loadTestGraph(){
@@ -61,6 +77,7 @@ public class Main {
         int choice = -1;
         while(choice != 0){
             clearConsole();
+            System.out.println("1 - Read book");
             System.out.println("2 - Print Statistics");
             System.out.println("3 - Depth Search");
             System.out.println("4 - Breadth Search");
@@ -75,6 +92,10 @@ public class Main {
 
             switch (choice) {
                 case 0:
+                    break;
+                case 1:
+                    graph = new Graph(true);
+                    readFiles();
                     break;
                 case 2:
                     graph.printStatistics();
