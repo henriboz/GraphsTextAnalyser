@@ -1,5 +1,10 @@
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -417,7 +422,6 @@ public class Graph {
         return result;
     }
 
-
     public ArrayList<Graph> fracamenteConectados(){
         Vertex originVertex = vertices.get(0);
         Stack<Vertex> stack = new Stack<>();
@@ -462,5 +466,36 @@ public class Graph {
             }
         }
         return grafos;
+    }
+    
+    public void savePajekToDisk(String destinationFolderPath) {
+    	DateFormat df = new SimpleDateFormat("yyyy-MM-dd_kk-mm-ss");
+    	String destinationFile = destinationFolderPath + "\\graph-" + df.format(new Date()) + ".pajek";
+    	
+    	try(PrintWriter writter = new PrintWriter(destinationFile)){
+    		//Vertices header
+    		writter.println("*Vertices " + vertices.size());
+    		
+    		//Vertices body
+        	for(Vertex v : vertices)
+        		writter.println(v.getIndex() + " \"" + v.getName() + "\"");
+        	
+        	//Edges/Arcs header
+        	writter.println("*" + (directed ? "Arcs" : "Edges"));
+        	
+        	//Edges/Arcs body
+        	for(Vertex v : vertices) {
+        		for (Map.Entry<Vertex, Integer> neighbor: v.getNeighbors().entrySet()) {
+        			//If not directed, do not create redundant neighbors
+        			if(!directed && neighbor.getKey().getIndex() < v.getIndex())
+        				continue;
+        			
+        			writter.println(v.getIndex() + " " + neighbor.getKey().getIndex() + " " + neighbor.getValue());
+        		}
+        	}
+        	
+    	} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
     }
 }

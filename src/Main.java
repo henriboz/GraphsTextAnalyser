@@ -10,6 +10,7 @@ public class Main {
     private static Graph graph;
     private static int origin, destination, distance;
     private static final String BOOK = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
+    private static final String PAJEK_DESTINATION_FOLDER_PATH = "F:\\temp";
 
     public static void main(String[] args) {
         menu();
@@ -28,6 +29,8 @@ public class Main {
             System.out.println("8 - Test Graph");
             System.out.println("9 - Print Vertices and Neighbors");
             System.out.println("10 - PRIM Minimum Cost Spanning Three");
+            System.out.println("11 - Weakly connected");
+            System.out.println("12 - Save Pajek to disk");
             System.out.print("Please enter your choice: ");
             Scanner scanner = new Scanner(System.in);
             choice = scanner.nextInt();
@@ -79,6 +82,9 @@ public class Main {
                         fraco.printVertices();
                     }
                     break;
+                case 12:
+                	graph.savePajekToDisk(PAJEK_DESTINATION_FOLDER_PATH);
+                	break;
                 default:
                     System.out.println("Invalid Option!");
 
@@ -100,7 +106,6 @@ public class Main {
         Vertex v0 = new Vertex("0");
         Vertex v1 = new Vertex("1");
         Vertex v2 = new Vertex("2");
-
         Vertex v3 = new Vertex("3");
         Vertex v4 = new Vertex("4");
         Vertex v5 = new Vertex("5");
