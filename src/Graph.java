@@ -1,5 +1,11 @@
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class Graph {
@@ -22,6 +28,7 @@ public class Graph {
         queue = new LinkedList<>();
         this.directed = directed;
     }
+    
     public int addVertex(Vertex v) {
         if (vertices.contains(v)) return vertices.indexOf(v);
         else{
@@ -47,9 +54,11 @@ public class Graph {
         }
         return true;
     }
+    
     public void printVertices(){
         System.out.println(vertices);
     }
+    
     public void printVerticesAndNeighbors(){
         for (Vertex v: vertices){
             v.printNeighbors();
@@ -125,7 +134,6 @@ public class Graph {
     }
 
     public void Warshall(boolean printDebug){
-
         int size = vertices.size();
 
         closure = new boolean[size][size];
@@ -187,6 +195,7 @@ public class Graph {
     public void Dijkstra(int originIndex, int destinationIndex){
         Dijkstra(vertices.get(originIndex), vertices.get(destinationIndex));
     }
+    
     public void Dijkstra(Vertex originVertex, Vertex destinationVertex){
         distances.clear();
         path.clear();
@@ -278,7 +287,6 @@ public class Graph {
         path.clear();
         route.clear();
     }
-
 
     public boolean depthSearch(int originVertex, int destinationVertex){
         return depthSearch(vertices.get(originVertex), vertices.get(destinationVertex));

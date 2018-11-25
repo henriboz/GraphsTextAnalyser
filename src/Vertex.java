@@ -1,8 +1,8 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Vertex
-{
+public class Vertex {
+	
     private String name;
     private int index;
     private HashMap<Vertex,Integer> neighbors = new HashMap<>();

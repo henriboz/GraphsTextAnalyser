@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -13,66 +11,10 @@ public class Main {
     private static int origin, destination, distance;
     private static final String BOOK = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
 
-
     public static void main(String[] args) {
         menu();
     }
-
-    public static void readFiles() {
-        FileVisitor<Path> fileProcessor = new ProcessFile(graph);
-        try {
-            Files.walkFileTree(Paths.get(BOOK), fileProcessor);
-        } catch (IOException e){
-            System.out.println("ERROR - " + e);
-        }
-    }
-
-    public static void loadTestGraph(){
-        graph = new Graph(false);
-        Vertex v0 = new Vertex("0");
-        Vertex v1 = new Vertex("1");
-        Vertex v2 = new Vertex("2");
-
-        Vertex v3 = new Vertex("3");
-        Vertex v4 = new Vertex("4");
-        Vertex v5 = new Vertex("5");
-        Vertex v6 = new Vertex("6");
-
-        graph.addVertex(v0);
-        graph.addVertex(v1);
-        graph.addVertex(v2);
-        graph.addVertex(v3);
-        graph.addVertex(v4);
-        graph.addVertex(v5);
-        graph.addVertex(v6);
-
-        graph.addNeighbor(v0,v1,1);
-        graph.addNeighbor(v1,v2,1);
-        graph.addNeighbor(v2,v6,1);
-        graph.addNeighbor(v3,v4,1);
-        graph.addNeighbor(v4,v5,1);
-        graph.addNeighbor(v5,v6,1);
-        graph.addNeighbor(v3,v6,1);
-        graph.addNeighbor(v6,v4,1);
-
-
-
-
-    }
-
-    public static void readOrigin(Scanner scanner){
-        System.out.print("Insert the origin Vertex: ");
-        origin = scanner.nextInt();
-    }
-    public static void readDestination(Scanner scanner){
-        System.out.print("Insert the destination Vertex: ");
-        destination = scanner.nextInt();
-    }
-    public static void readDistance(Scanner scanner){
-        System.out.print("Insert the distance: ");
-        distance = scanner.nextInt();
-    }
-
+    
     public static void menu(){
         int choice = -1;
         while(choice != 0){
@@ -128,7 +70,8 @@ public class Main {
                     break;
                 case 10:
                     readOrigin(scanner);
-                    Graph g = graph.primMinimumCostSpanningThree(origin);
+                    //Graph g = graph.primMinimumCostSpanningThree(origin);
+                    graph.primMinimumCostSpanningThree(origin);
                     break;
                 case 11:
                     for(Graph fraco: graph.fracamenteConectados()){
@@ -143,23 +86,68 @@ public class Main {
         }
     }
 
-    public final static void clearConsole()
-    {
-        try
-        {
+    public static void readFiles() {
+        FileVisitor<Path> fileProcessor = new ProcessFile(graph);
+        try {
+            Files.walkFileTree(Paths.get(BOOK), fileProcessor);
+        } catch (IOException e){
+            System.out.println("ERROR - " + e);
+        }
+    }
+
+    public static void loadTestGraph(){
+        graph = new Graph(false);
+        Vertex v0 = new Vertex("0");
+        Vertex v1 = new Vertex("1");
+        Vertex v2 = new Vertex("2");
+
+        Vertex v3 = new Vertex("3");
+        Vertex v4 = new Vertex("4");
+        Vertex v5 = new Vertex("5");
+        Vertex v6 = new Vertex("6");
+
+        graph.addVertex(v0);
+        graph.addVertex(v1);
+        graph.addVertex(v2);
+        graph.addVertex(v3);
+        graph.addVertex(v4);
+        graph.addVertex(v5);
+        graph.addVertex(v6);
+
+        graph.addNeighbor(v0,v1,1);
+        graph.addNeighbor(v1,v2,1);
+        graph.addNeighbor(v2,v6,1);
+        graph.addNeighbor(v3,v4,1);
+        graph.addNeighbor(v4,v5,1);
+        graph.addNeighbor(v5,v6,1);
+        graph.addNeighbor(v3,v6,1);
+        graph.addNeighbor(v6,v4,1);
+    }
+
+    public static void readOrigin(Scanner scanner){
+        System.out.print("Insert the origin Vertex: ");
+        origin = scanner.nextInt();
+    }
+    
+    public static void readDestination(Scanner scanner){
+        System.out.print("Insert the destination Vertex: ");
+        destination = scanner.nextInt();
+    }
+    
+    public static void readDistance(Scanner scanner){
+        System.out.print("Insert the distance: ");
+        distance = scanner.nextInt();
+    }
+
+    public final static void clearConsole(){
+        try{
             final String os = System.getProperty("os.name");
-            if (os.contains("Windows"))
-            {
-                Runtime.getRuntime().exec("cls");
-            }
-            else
-            {
+            if (os.contains("Windows")) {
+                //Runtime.getRuntime().exec("cls");
+            	System.out.println("");
+            } else {
                 Runtime.getRuntime().exec("clear");
             }
-        }
-        catch (final Exception e)
-        {
-            //
-        }
+        } catch (final Exception e) {}
     }
 }
