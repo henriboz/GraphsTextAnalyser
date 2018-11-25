@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,9 +24,13 @@ public class Graph {
     private HashMap<Vertex,Boolean> visited;
     private Stack<Vertex> route;
     private Queue<Vertex> queue;
-    private static final int infinite = Integer.MAX_VALUE;
+    private static final int INFINITE = Integer.MAX_VALUE;
     private boolean directed;
 
+    public Graph() {
+    	this(false);
+    }
+    		
     public Graph(boolean directed){
         distances = new HashMap<>();
         visited = new HashMap<>();
@@ -177,7 +183,7 @@ public class Graph {
     //Finds the non-visited position (visited=false) with the lowest value of distance)
     private Vertex findVertex(){
         Vertex foundVertex = null;
-        int foundValue = infinite;
+        int foundValue = INFINITE;
         for(Vertex v: vertices){
             if(!visited.containsKey(v)){
                 if(distances.containsKey(v)){
@@ -395,7 +401,7 @@ public class Graph {
             visited.add(current);
             //System.out.println(visited);
 
-            int foundValue = infinite;
+            int foundValue = INFINITE;
             Vertex foundVertex = null;
             Vertex foundOrigin = null;
             for(Vertex v: visited){
@@ -468,7 +474,7 @@ public class Graph {
         return grafos;
     }
     
-    public void savePajekToDisk(String destinationFolderPath) {
+    public void savePajekFile(String destinationFolderPath) {
     	DateFormat df = new SimpleDateFormat("yyyy-MM-dd_kk-mm-ss");
     	String destinationFile = destinationFolderPath + "\\graph-" + df.format(new Date()) + ".pajek";
     	
@@ -495,6 +501,44 @@ public class Graph {
         	}
         	
     	} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public void readPajekFile(String readFilePath) {
+    	int step = 1; //The pajek reading process takes 4 steps
+    	int verticesQuantity = 0;
+    	int verticesCreated = 0;
+    	
+    	try(BufferedReader br = new BufferedReader(new FileReader(readFilePath))) {
+    		for(String line; (line = br.readLine()) != null; ) {
+    			
+    			switch(step) {
+    			case 1: //Read vertices quantity
+    				verticesQuantity = Integer.valueOf(line.split(" ")[1]);
+    				step++;
+    				break;
+    				
+    			case 2: //Create vertices and add to graph
+    				Vertex v = new Vertex(line.substring(line.indexOf("\"")+1, line.lastIndexOf("\"")));
+    				this.addVertex(v);
+
+    				if(++verticesCreated == verticesQuantity)
+    					step++;
+    				break;
+    				
+    			case 3: //Set the graph to directed or not directed
+    				this.directed = line.equalsIgnoreCase("*arcs");
+    				step++;
+    				break;
+    				
+    			case 4: //Create edges/arcs
+    				String[] split = line.split(" ");
+    				this.addNeighbor(Integer.valueOf(split[0]), Integer.valueOf(split[1]), Integer.valueOf(split[2]));
+    				break;
+    			}
+    		}
+    	} catch (Exception e) {
 			e.printStackTrace();
 		}
     }

@@ -9,8 +9,9 @@ public class Main {
 
     private static Graph graph;
     private static int origin, destination, distance;
-    private static final String BOOK = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
+    private static final String BOOK_FILE_PATH = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
     private static final String PAJEK_DESTINATION_FOLDER_PATH = "F:\\temp";
+    private static final String PAJEK_READ_FILE_PATH = "F:\\temp\\pajek_read.pajek";
 
     public static void main(String[] args) {
         menu();
@@ -31,6 +32,7 @@ public class Main {
             System.out.println("10 - PRIM Minimum Cost Spanning Three");
             System.out.println("11 - Weakly connected");
             System.out.println("12 - Save Pajek to disk");
+            System.out.println("13 - Read Pajek from disk file");
             System.out.print("Please enter your choice: ");
             Scanner scanner = new Scanner(System.in);
             choice = scanner.nextInt();
@@ -83,7 +85,11 @@ public class Main {
                     }
                     break;
                 case 12:
-                	graph.savePajekToDisk(PAJEK_DESTINATION_FOLDER_PATH);
+                	graph.savePajekFile(PAJEK_DESTINATION_FOLDER_PATH);
+                	break;
+                case 13:
+                	graph = new Graph();
+                	graph.readPajekFile(PAJEK_READ_FILE_PATH);
                 	break;
                 default:
                     System.out.println("Invalid Option!");
@@ -95,7 +101,7 @@ public class Main {
     public static void readFiles() {
         FileVisitor<Path> fileProcessor = new ProcessFile(graph);
         try {
-            Files.walkFileTree(Paths.get(BOOK), fileProcessor);
+            Files.walkFileTree(Paths.get(BOOK_FILE_PATH), fileProcessor);
         } catch (IOException e){
             System.out.println("ERROR - " + e);
         }
