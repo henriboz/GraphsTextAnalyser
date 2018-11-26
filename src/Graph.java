@@ -1,5 +1,18 @@
-import java.lang.reflect.Array;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class Graph {
@@ -11,9 +24,13 @@ public class Graph {
     private HashMap<Vertex,Boolean> visited;
     private Stack<Vertex> route;
     private Queue<Vertex> queue;
-    private static final int infinite = Integer.MAX_VALUE;
+    private static final int INFINITE = Integer.MAX_VALUE;
     private boolean directed;
 
+    public Graph() {
+    	this(false);
+    }
+    		
     public Graph(boolean directed){
         distances = new HashMap<>();
         visited = new HashMap<>();
@@ -22,6 +39,7 @@ public class Graph {
         queue = new LinkedList<>();
         this.directed = directed;
     }
+    
     public int addVertex(Vertex v) {
         if (vertices.contains(v)) return vertices.indexOf(v);
         else{
@@ -47,9 +65,11 @@ public class Graph {
         }
         return true;
     }
+    
     public void printVertices(){
         System.out.println(vertices);
     }
+    
     public void printVerticesAndNeighbors(){
         for (Vertex v: vertices){
             v.printNeighbors();
@@ -125,7 +145,6 @@ public class Graph {
     }
 
     public void Warshall(boolean printDebug){
-
         int size = vertices.size();
 
         closure = new boolean[size][size];
@@ -164,7 +183,7 @@ public class Graph {
     //Finds the non-visited position (visited=false) with the lowest value of distance)
     private Vertex findVertex(){
         Vertex foundVertex = null;
-        int foundValue = infinite;
+        int foundValue = INFINITE;
         for(Vertex v: vertices){
             if(!visited.containsKey(v)){
                 if(distances.containsKey(v)){
@@ -187,6 +206,7 @@ public class Graph {
     public void Dijkstra(int originIndex, int destinationIndex){
         Dijkstra(vertices.get(originIndex), vertices.get(destinationIndex));
     }
+    
     public void Dijkstra(Vertex originVertex, Vertex destinationVertex){
         distances.clear();
         path.clear();
@@ -278,7 +298,6 @@ public class Graph {
         path.clear();
         route.clear();
     }
-
 
     public boolean depthSearch(int originVertex, int destinationVertex){
         return depthSearch(vertices.get(originVertex), vertices.get(destinationVertex));
@@ -382,7 +401,7 @@ public class Graph {
             visited.add(current);
             //System.out.println(visited);
 
-            int foundValue = infinite;
+            int foundValue = INFINITE;
             Vertex foundVertex = null;
             Vertex foundOrigin = null;
             for(Vertex v: visited){
@@ -408,7 +427,6 @@ public class Graph {
         result.printVerticesAndNeighbors();
         return result;
     }
-
 
     public ArrayList<Graph> fracamenteConectados(){
         Vertex originVertex = vertices.get(0);
@@ -454,5 +472,74 @@ public class Graph {
             }
         }
         return grafos;
+    }
+    
+    public void savePajekFile(String destinationFolderPath) {
+    	DateFormat df = new SimpleDateFormat("yyyy-MM-dd_kk-mm-ss");
+    	String destinationFile = destinationFolderPath + "\\graph-" + df.format(new Date()) + ".pajek";
+    	
+    	try(PrintWriter writter = new PrintWriter(destinationFile)){
+    		//Vertices header
+    		writter.println("*Vertices " + vertices.size());
+    		
+    		//Vertices body
+        	for(Vertex v : vertices)
+        		writter.println(v.getIndex() + " \"" + v.getName() + "\"");
+        	
+        	//Edges/Arcs header
+        	writter.println("*" + (directed ? "Arcs" : "Edges"));
+        	
+        	//Edges/Arcs body
+        	for(Vertex v : vertices) {
+        		for (Map.Entry<Vertex, Integer> neighbor: v.getNeighbors().entrySet()) {
+        			//If not directed, do not create redundant neighbors
+        			if(!directed && neighbor.getKey().getIndex() < v.getIndex())
+        				continue;
+        			
+        			writter.println(v.getIndex() + " " + neighbor.getKey().getIndex() + " " + neighbor.getValue());
+        		}
+        	}
+        	
+    	} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public void readPajekFile(String readFilePath) {
+    	int step = 1; //The pajek reading process takes 4 steps
+    	int verticesQuantity = 0;
+    	int verticesCreated = 0;
+    	
+    	try(BufferedReader br = new BufferedReader(new FileReader(readFilePath))) {
+    		for(String line; (line = br.readLine()) != null; ) {
+    			
+    			switch(step) {
+    			case 1: //Read vertices quantity
+    				verticesQuantity = Integer.valueOf(line.split(" ")[1]);
+    				step++;
+    				break;
+    				
+    			case 2: //Create vertices and add to graph
+    				Vertex v = new Vertex(line.substring(line.indexOf("\"")+1, line.lastIndexOf("\"")));
+    				this.addVertex(v);
+
+    				if(++verticesCreated == verticesQuantity)
+    					step++;
+    				break;
+    				
+    			case 3: //Set the graph to directed or not directed
+    				this.directed = line.equalsIgnoreCase("*arcs");
+    				step++;
+    				break;
+    				
+    			case 4: //Create edges/arcs
+    				String[] split = line.split(" ");
+    				this.addNeighbor(Integer.valueOf(split[0]), Integer.valueOf(split[1]), Integer.valueOf(split[2]));
+    				break;
+    			}
+    		}
+    	} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 }
