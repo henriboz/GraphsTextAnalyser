@@ -9,7 +9,7 @@ public class Main {
 
     private static Graph graph;
     private static int origin, destination, distance;
-    private static final String BOOK_FILE_PATH = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
+    private static final String BOOK_FILE_PATH = "F:\\temp\\book.txt";
     private static final String PAJEK_DESTINATION_FOLDER_PATH = "F:\\temp";
     private static final String PAJEK_READ_FILE_PATH = "F:\\temp\\pajek_read.pajek";
 
@@ -18,6 +18,8 @@ public class Main {
     }
     
     public static void menu(){
+    	long initialTime;
+    	
         int choice = -1;
         while(choice != 0){
             clearConsole();
@@ -42,7 +44,9 @@ public class Main {
                     break;
                 case 1:
                     graph = new Graph(true);
+                    initialTime = System.currentTimeMillis();
                     readFiles();
+                    System.out.println("Time elapsed(ms): " + (System.currentTimeMillis()-initialTime));
                     break;
                 case 2:
                     graph.printStatistics();
@@ -89,7 +93,9 @@ public class Main {
                 	break;
                 case 13:
                 	graph = new Graph();
+                	initialTime = System.currentTimeMillis();
                 	graph.readPajekFile(PAJEK_READ_FILE_PATH);
+                	System.out.println("Time elapsed(ms): " + (System.currentTimeMillis()-initialTime));
                 	break;
                 default:
                     System.out.println("Invalid Option!");
