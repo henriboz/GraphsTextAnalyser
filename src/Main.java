@@ -9,9 +9,9 @@ public class Main {
 
     private static Graph graph;
     private static int origin, destination, distance;
-    private static final String BOOK_FILE_PATH = "F:\\temp\\book.txt";
-    private static final String PAJEK_DESTINATION_FOLDER_PATH = "F:\\temp";
-    private static final String PAJEK_READ_FILE_PATH = "F:\\temp\\pajek_read.pajek";
+    private static final String BOOK_FILE_PATH = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
+    private static final String PAJEK_DESTINATION_FOLDER_PATH = "C:\\Users\\Henrique Boz\\Desktop";
+    private static final String PAJEK_READ_FILE_PATH = "C:\\Users\\Henrique Boz\\Desktop\\pajek_read.pajek";
 
     public static void main(String[] args) {
         menu();
@@ -35,6 +35,7 @@ public class Main {
             System.out.println("11 - Weakly connected");
             System.out.println("12 - Save Pajek to disk");
             System.out.println("13 - Read Pajek from disk file");
+            System.out.println("14 - Generate random graph");
             System.out.print("Please enter your choice: ");
             Scanner scanner = new Scanner(System.in);
             choice = scanner.nextInt();
@@ -97,6 +98,15 @@ public class Main {
                 	graph.readPajekFile(PAJEK_READ_FILE_PATH);
                 	System.out.println("Time elapsed(ms): " + (System.currentTimeMillis()-initialTime));
                 	break;
+                case 14:
+                    System.out.print("Insert the number of vertices: ");
+                    int v = scanner.nextInt();
+                    System.out.print("Insert the number of edges: ");
+                    int e = scanner.nextInt();
+                    System.out.print("Is the graph connected? (true/false): ");
+                    boolean c = scanner.nextBoolean();
+                    graph = Graph.randomGraph(v,e,c);
+                    break;
                 default:
                     System.out.println("Invalid Option!");
 

@@ -4,15 +4,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Graph {
@@ -541,5 +533,41 @@ public class Graph {
     	} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+
+    public static Graph randomGraph(int nodes, int edges, boolean connected){
+        Graph g = new Graph(true);
+        ArrayList<Vertex> usedVertices = new ArrayList<>();
+        //ArrayList<Vertex> unusedVertices = new ArrayList<>();
+        Random random = new Random();
+
+        //Generates the vertices
+        for (int i=0; i<nodes; i++){
+            Vertex v = new Vertex(String.valueOf(i));
+            g.addVertex(v);
+            //unusedVertices.add(v);
+        }
+
+        //Random a first vertex from total, adds to used nodes and remove from unused
+        int currentVertex = random.nextInt(nodes);
+        if(connected) usedVertices.add(g.vertices.get(currentVertex));
+
+        int createdEdges = 0;
+        while(createdEdges < edges){
+            int newVertex = -1;
+            while(newVertex==-1) {
+                int i = random.nextInt(nodes-1);
+                if (i != currentVertex && !g.vertices.get(currentVertex).isNeighbor(g.vertices.get(i))) {
+                    newVertex = i;
+                    g.addNeighbor(currentVertex, newVertex, 1);
+                    createdEdges ++;
+                }
+            }
+            if(connected){
+                usedVertices.add(g.vertices.get(newVertex));
+                currentVertex = random.nextInt(usedVertices.size());
+            } else currentVertex = random.nextInt(nodes);
+        }
+        return g;
     }
 }
