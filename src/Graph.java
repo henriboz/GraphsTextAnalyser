@@ -537,7 +537,7 @@ public class Graph {
 
     public static Graph randomGraph(int nodes, int edges, boolean connected){
         Graph g = new Graph(true);
-        ArrayList<Vertex> usedVertices = new ArrayList<>();
+        Set<Vertex> usedVertices = new HashSet<>();
         //ArrayList<Vertex> unusedVertices = new ArrayList<>();
         Random random = new Random();
 
@@ -556,7 +556,7 @@ public class Graph {
         while(createdEdges < edges){
             int newVertex = -1;
             while(newVertex==-1) {
-                int i = random.nextInt(nodes-1);
+                int i = random.nextInt(nodes);
                 if (i != currentVertex && !g.vertices.get(currentVertex).isNeighbor(g.vertices.get(i))) {
                     newVertex = i;
                     g.addNeighbor(currentVertex, newVertex, 1);
