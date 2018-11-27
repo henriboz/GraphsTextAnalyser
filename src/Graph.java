@@ -570,4 +570,38 @@ public class Graph {
         }
         return g;
     }
+    
+    public boolean checkConnected() throws Exception {
+    	if(directed) {
+    		throw new Exception("Only works for non directed graphs!");
+    	}
+    	
+    	//Try every pair to check if origin can reach destiny
+    	for(int origin = 0; origin < vertices.size()-1; origin++) {
+    		for(int destiny = origin+1; destiny < vertices.size(); destiny++) {
+
+    			//If any pair is not reachable, the graph is not connected
+    			if(!depthSearch(origin, destiny)) {
+    				return false;
+    			}
+    		}
+    	}
+    	
+    	return true;
+    }
+    
+    public boolean checkEulerian() {
+    	//Zero or two odd vertices
+    	int oddCount = 0;
+    	
+    	for(int i = 0; i < vertices.size(); i++) {
+    		if(vertices.get(i).getNeighborsSize() % 2 == 1)
+    			oddCount++;
+    		
+    		if(oddCount > 2)
+    			return false;
+    	}
+    	
+    	return oddCount == 0 || oddCount == 2;
+    }
 }

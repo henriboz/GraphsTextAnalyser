@@ -9,9 +9,9 @@ public class Main {
 
     private static Graph graph;
     private static int origin, destination, distance;
-    private static final String BOOK_FILE_PATH = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
-    private static final String PAJEK_DESTINATION_FOLDER_PATH = "C:\\Users\\Henrique Boz\\Desktop";
-    private static final String PAJEK_READ_FILE_PATH = "C:\\Users\\Henrique Boz\\Desktop\\pajek_read.pajek";
+    private static final String BOOK_FILE_PATH = "F:\\temp\\book.txt";
+    private static final String PAJEK_DESTINATION_FOLDER_PATH = "F:\\temp\\Desktop";
+    private static final String PAJEK_READ_FILE_PATH = "F:\\temp\\pajek_read.pajek";
 
     public static void main(String[] args) {
         menu();
@@ -36,6 +36,8 @@ public class Main {
             System.out.println("12 - Save Pajek to disk");
             System.out.println("13 - Read Pajek from disk file");
             System.out.println("14 - Generate random graph");
+            System.out.println("15 - Check Connected");
+            System.out.println("16 - Check Eulerian");
             System.out.print("Please enter your choice: ");
             Scanner scanner = new Scanner(System.in);
             choice = scanner.nextInt();
@@ -107,6 +109,23 @@ public class Main {
                     boolean c = scanner.nextBoolean();
                     graph = Graph.randomGraph(v,e,c);
                     break;
+                case 15:
+                	try {
+	                	if(graph.checkConnected()) {
+	                		System.out.println("Connected!");
+	                	} else {
+	                		System.out.println("Not connected");
+	                	}
+                	} catch (Exception exc) {
+                		System.out.println(exc.getMessage());
+					}
+                	break;
+                case 16:
+                	if(graph.checkEulerian())
+                		System.out.println("Eulerian graph!");
+                	else
+                		System.out.println("Not Eulerian!");
+                	break;
                 default:
                     System.out.println("Invalid Option!");
 
@@ -129,26 +148,15 @@ public class Main {
         Vertex v1 = new Vertex("1");
         Vertex v2 = new Vertex("2");
         Vertex v3 = new Vertex("3");
-        Vertex v4 = new Vertex("4");
-        Vertex v5 = new Vertex("5");
-        Vertex v6 = new Vertex("6");
 
         graph.addVertex(v0);
         graph.addVertex(v1);
         graph.addVertex(v2);
         graph.addVertex(v3);
-        graph.addVertex(v4);
-        graph.addVertex(v5);
-        graph.addVertex(v6);
 
         graph.addNeighbor(v0,v1,1);
-        graph.addNeighbor(v1,v2,1);
-        graph.addNeighbor(v2,v6,1);
-        graph.addNeighbor(v3,v4,1);
-        graph.addNeighbor(v4,v5,1);
-        graph.addNeighbor(v5,v6,1);
-        graph.addNeighbor(v3,v6,1);
-        graph.addNeighbor(v6,v4,1);
+        //graph.addNeighbor(v1,v2,1); //Comment for not connected and not Eulerian
+        graph.addNeighbor(v2,v3,1);
     }
 
     public static void readOrigin(Scanner scanner){
