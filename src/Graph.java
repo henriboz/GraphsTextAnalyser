@@ -18,6 +18,7 @@ public class Graph {
     private Queue<Vertex> queue;
     private static final int INFINITE = Integer.MAX_VALUE;
     private boolean directed;
+    private int lastDijkstraWeight = 0; 
 
     public Graph() {
     	this(false);
@@ -284,6 +285,7 @@ public class Graph {
         }
         System.out.print(current);
         System.out.println(" - Weight: "+ weight);
+        lastDijkstraWeight = weight;
 
         distances.clear();
         visited.clear();
@@ -603,5 +605,25 @@ public class Graph {
     	}
     	
     	return oddCount == 0 || oddCount == 2;
+    }
+    
+    public void calculateCloseness() {
+    	List<Double> closeness = new ArrayList<>();
+    	
+    	//For each vertice, calculate its closeness
+    	for(int i = 0; i < vertices.size(); i++) {
+    		double c = 0;
+    		for(int j = 0; j < vertices.size(); j++) {
+    			Dijkstra(j, i);
+    			c += lastDijkstraWeight;
+    		}
+    		c = 1.0/c;
+    		closeness.add(c);
+    	}
+    	
+    	System.out.println("Printing all closeness values:");
+    	for(int i = 0; i < vertices.size(); i++) {
+    		System.out.println("Vertice " + i + ": " + closeness.get(i));
+    	}
     }
 }

@@ -38,6 +38,7 @@ public class Main {
             System.out.println("14 - Generate random graph");
             System.out.println("15 - Check Connected");
             System.out.println("16 - Check Eulerian");
+            System.out.println("17 - Calculate Closeness");
             System.out.print("Please enter your choice: ");
             Scanner scanner = new Scanner(System.in);
             choice = scanner.nextInt();
@@ -125,6 +126,9 @@ public class Main {
                 		System.out.println("Eulerian graph!");
                 	else
                 		System.out.println("Not Eulerian!");
+                	break;
+                case 17:
+                	graph.calculateCloseness();
                 	break;
                 default:
                     System.out.println("Invalid Option!");
