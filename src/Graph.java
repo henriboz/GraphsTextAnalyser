@@ -99,7 +99,8 @@ public class Graph {
                 }
             }
         }
-        System.out.println("Number de Edges: " + edges);
+        if(directed) System.out.println("Number de Edges: " + edges);
+        else System.out.println("Number de Edges: " + edges/2);
 
         //Ordena o Map para imprimir os 20 maiores
         Map<Vertex, Integer> resultCountOutput = countOutput.entrySet().stream()
@@ -276,15 +277,15 @@ public class Graph {
         int size = route.size();
         Vertex current = route.pop();
         int weight = 0;
-        System.out.print("Dijkstra Result: ");
+        //System.out.print("Dijkstra Result: ");
         for(int i=0; i<size-1; i++){
-            System.out.print(current + "->");
+            //System.out.print(current + "->");
             Vertex precursor = current;
             current = route.pop();
             weight += precursor.getNeighborWeight(current);
         }
-        System.out.print(current);
-        System.out.println(" - Weight: "+ weight);
+        //System.out.print(current);
+        //System.out.println(" - Weight: "+ weight);
         lastDijkstraWeight = weight;
 
         distances.clear();
@@ -300,7 +301,7 @@ public class Graph {
     public boolean depthSearch(Vertex originVertex, Vertex destinationVertex){
         if(originVertex == destinationVertex){
             route.add(originVertex);
-            System.out.println("Depth Search Result: " + route);
+            //System.out.println("Depth Search Result: " + route);
             route.clear();
             return true;
         }
@@ -538,21 +539,25 @@ public class Graph {
     }
 
     public static Graph randomGraph(int nodes, int edges, boolean connected){
-        Graph g = new Graph(true);
+        Graph g = new Graph(false);
         Set<Vertex> usedVertices = new HashSet<>();
-        //ArrayList<Vertex> unusedVertices = new ArrayList<>();
+        ArrayList<Vertex> unusedVertices = new ArrayList<>();
         Random random = new Random();
 
         //Generates the vertices
         for (int i=0; i<nodes; i++){
             Vertex v = new Vertex(String.valueOf(i));
             g.addVertex(v);
-            //unusedVertices.add(v);
+            unusedVertices.add(v);
         }
 
         //Random a first vertex from total, adds to used nodes and remove from unused
         int currentVertex = random.nextInt(nodes);
-        if(connected) usedVertices.add(g.vertices.get(currentVertex));
+        if(connected)
+        {
+            usedVertices.add(g.vertices.get(currentVertex));
+            unusedVertices.remove(g.vertices.get(currentVertex));
+        }
 
         int createdEdges = 0;
         while(createdEdges < edges){
@@ -560,16 +565,49 @@ public class Graph {
             while(newVertex==-1) {
                 int i = random.nextInt(nodes);
                 if (i != currentVertex && !g.vertices.get(currentVertex).isNeighbor(g.vertices.get(i))) {
-                    newVertex = i;
-                    g.addNeighbor(currentVertex, newVertex, 1);
-                    createdEdges ++;
+                    if(connected)
+                    {
+                        if(unusedVertices.size() > 0) {
+                            if (unusedVertices.contains(g.vertices.get(i))) {
+                                newVertex = i;
+                                g.addNeighbor(currentVertex, newVertex, 1);
+                                createdEdges++;
+                            }
+                        } else
+                        {
+                            newVertex = i;
+                            g.addNeighbor(currentVertex, newVertex, 1);
+                            createdEdges ++;
+                        }
+                    }
+                    else
+                    {
+                        newVertex = i;
+                        g.addNeighbor(currentVertex, newVertex, 1);
+                        createdEdges ++;
+                    }
                 }
             }
             if(connected){
                 usedVertices.add(g.vertices.get(newVertex));
-                currentVertex = random.nextInt(usedVertices.size());
+                unusedVertices.remove(g.vertices.get(newVertex));
+                int n = random.nextInt(usedVertices.size());
+                int count = 0;
+                for (Vertex v: usedVertices){
+                    if(count == n){
+                        currentVertex = v.getIndex();
+                        break;
+                    }
+                    count++;
+                }
             } else currentVertex = random.nextInt(nodes);
         }
+        try{
+            if(!connected && g.checkConnected()) return Graph.randomGraph(nodes,edges,connected);
+        }catch (Exception e){
+            System.out.println("Will never fall here");
+        }
+
         return g;
     }
     

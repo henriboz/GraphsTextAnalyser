@@ -9,7 +9,7 @@ public class Main {
 
     private static Graph graph;
     private static int origin, destination, distance;
-    private static final String BOOK_FILE_PATH = "F:\\temp\\book.txt";
+    private static final String BOOK_FILE_PATH = "C:\\Users\\Henrique Boz\\Desktop\\book.txt";
     private static final String PAJEK_DESTINATION_FOLDER_PATH = "F:\\temp\\Desktop";
     private static final String PAJEK_READ_FILE_PATH = "F:\\temp\\pajek_read.pajek";
 
